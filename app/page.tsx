@@ -20,10 +20,6 @@ import type { ConnectionDetails } from "./api/connection-details/route";
 export default function Page() {
   const [room] = useState(new Room());
 
-  async function sendEmail(email:string) {
-    const info = await room.localParticipant.sendText(email)
-  }
-
   const onConnectButtonClicked = useCallback(async () => {
     // Generate room connection details, including:
     //   - A random Room name
