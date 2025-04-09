@@ -71,14 +71,25 @@ function SimpleVoiceAssistant(props: { onConnectButtonClicked: () => void }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, top: "-10px" }}
             transition={{ duration: 1, ease: [0.09, 1.04, 0.245, 1.055] }}
-            className="uppercase absolute left-1/2 -translate-x-1/2 space-x-5"
+            className="absolute left-1/2 -translate-x-1/2 space-y-5 flex flex-col items-center -translate-y-1/2"
           >
+            <h1 className="text-2xl font-bold">Volition Labs Voice Agent Sandbox</h1>
+            <h2 className="text-xl font-bold">Pantarini Restaurant Sandbox</h2>
+            <p className="text-center">
+              Try our sandboxed voice agent, built to handle order booking and tracking for a demo restaurant. Feel free to ask it anything—no voice or transcript data is stored.
+              <br /><br />
+              After your chat, we'd appreciate your feedback through a quick 3-question form.
+              <br /><br />
+              <p>You can reach out to me on the <a className="underline" href="https://www.linkedin.com/in/aditya-kumar-5a1689278/">LinkedID</a>.</p>
+            </p>
+            <div className="flex gap-4">
             <button className="bg-white text-black rounded-md px-4 py-2" onClick={() => props.onConnectButtonClicked()}>Start a conversation</button>
             <button className="bg-yellow-500 text-amber-800 rounded-md px-4 py-2">
               <a href="https://form.jotform.com/250985522943465" target="__blank">
               Leave Feedback  
               </a>
             </button>
+            </div>
           </motion.div>
         )}
         <div className="w-3/4 lg:w-1/2 mx-auto h-full">
