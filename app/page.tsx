@@ -78,7 +78,7 @@ function SimpleVoiceAssistant(props: { onConnectButtonClicked: () => void }) {
             <p className="text-center">
               Try our sandboxed voice agent, built to handle order booking and tracking for a demo restaurant. Feel free to ask it anything—no voice or transcript data is stored.
               <br /><br />
-              After your chat, we'd appreciate your feedback through a quick 3-question form.
+              After your chat, we would appreciate your feedback through a quick 3-question form.
               <br /><br />
               <p>You can reach out to me on the <a className="underline" href="https://www.linkedin.com/in/aditya-kumar-5a1689278/">LinkedID</a>.</p>
             </p>
