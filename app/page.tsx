@@ -19,6 +19,39 @@ import type { ConnectionDetails } from "./api/connection-details/route";
 
 export default function Page() {
   const [room] = useState(new Room());
+  const [micPermission, setMicPermission] = useState<PermissionState>('prompt');
+
+  const checkMicPermission = useCallback(async () => {
+    try {
+      // First, check if permissions are already granted
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop());
+      setMicPermission('granted');
+      return true;
+    } catch (error) {
+      // Permission not granted or denied
+      console.log('Microphone permission not granted:', error);
+      setMicPermission('prompt');
+      return false;
+    }
+  }, []);
+
+  const requestMicPermission = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop());
+      setMicPermission('granted');
+      await onConnectButtonClicked();
+    } catch (error) {
+      console.error('Error acquiring microphone permissions:', error);
+      setMicPermission('denied');
+      alert('Microphone access was denied. Please check your browser settings.');
+    }
+  }, []);
+
+  useEffect(() => {
+    checkMicPermission();
+  }, []);
 
   const onConnectButtonClicked = useCallback(async () => {
     // Generate room connection details, including:
@@ -53,15 +86,24 @@ export default function Page() {
     <main data-lk-theme="default" className="h-full grid content-center bg-[var(--lk-bg)]">
       <RoomContext.Provider value={room}>
         <div className="lk-room-container max-h-[90vh]">
-          <SimpleVoiceAssistant onConnectButtonClicked={onConnectButtonClicked} />
+          <SimpleVoiceAssistant 
+            onConnectButtonClicked={onConnectButtonClicked} 
+            micPermission={micPermission} 
+            requestMicPermission={requestMicPermission} 
+          />
         </div>
       </RoomContext.Provider>
     </main>
   );
 }
 
-function SimpleVoiceAssistant(props: { onConnectButtonClicked: () => void }) {
+function SimpleVoiceAssistant(props: { 
+  onConnectButtonClicked: () => void; 
+  micPermission: PermissionState; 
+  requestMicPermission: () => void 
+}) {
   const { state: agentState } = useVoiceAssistant();
+
   return (
     <>
       <AnimatePresence>
@@ -83,12 +125,26 @@ function SimpleVoiceAssistant(props: { onConnectButtonClicked: () => void }) {
               <p>You can reach out to me on the <a className="underline" href="https://www.linkedin.com/in/aditya-kumar-5a1689278/">LinkedID</a>.</p>
             </p>
             <div className="flex gap-4">
-            <button className="bg-white text-black rounded-md px-4 py-2" onClick={() => props.onConnectButtonClicked()}>Start a conversation</button>
-            <button className="bg-yellow-500 text-amber-800 rounded-md px-4 py-2">
-              <a href="https://form.jotform.com/250985522943465" target="__blank">
-              Leave Feedback  
-              </a>
-            </button>
+              {props.micPermission !== 'granted' ? (
+                <button 
+                  className="bg-blue-500 text-white rounded-md px-4 py-2" 
+                  onClick={props.requestMicPermission}
+                >
+                  Request Microphone Access
+                </button>
+              ) : (
+                <button 
+                  className="bg-white text-black rounded-md px-4 py-2" 
+                  onClick={() => props.onConnectButtonClicked()}
+                >
+                  Start a conversation
+                </button>
+              )}
+              <button className="bg-yellow-500 text-amber-800 rounded-md px-4 py-2">
+                <a href="https://form.jotform.com/250985522943465" target="__blank">
+                Leave Feedback  
+                </a>
+              </button>
             </div>
           </motion.div>
         )}
